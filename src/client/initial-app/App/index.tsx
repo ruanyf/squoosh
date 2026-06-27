@@ -12,7 +12,10 @@ import 'shared/custom-els/snack-bar';
 import Intro from 'shared/prerendered-app/Intro';
 import 'shared/custom-els/loading-spinner';
 
-const ROUTE_EDITOR = '/editor';
+// The app may be deployed under a subdirectory (e.g. `/squoosh/`), so the
+// editor route is a second-level path: `<base>/editor`. `__BASE_PATH__` always
+// ends with `/` (it's `/` for a root deployment).
+const ROUTE_EDITOR = __BASE_PATH__ + 'editor';
 
 const compressPromise = import('client/lazy-app/Compress');
 const swBridgePromise = import('client/lazy-app/sw-bridge');
@@ -58,7 +61,7 @@ export default class App extends Component<Props, State> {
       if (!this.state.awaitingShareTarget) return;
       const file = await getSharedImage();
       // Remove the ?share-target from the URL
-      history.replaceState('', '', '/');
+      history.replaceState('', '', __BASE_PATH__);
       this.openEditor();
       this.setState({ file, awaitingShareTarget: false });
     });

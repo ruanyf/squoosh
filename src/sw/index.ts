@@ -12,6 +12,11 @@ import { shouldCacheDynamically } from './to-cache';
 // Give TypeScript the correct global.
 declare var self: ServiceWorkerGlobalScope;
 
+// The app may be deployed under a subdirectory (e.g. `/squoosh/`), so routes
+// like `/editor` and `/` become `<base>/editor` and `<base>/`. `__BASE_PATH__`
+// always ends with `/` (`/` for a root deployment).
+const ROUTE_EDITOR = __BASE_PATH__ + 'editor';
+
 const versionedCache = 'static-' + VERSION;
 const dynamicCache = 'dynamic';
 const expectedCaches = [versionedCache, dynamicCache];
@@ -54,13 +59,13 @@ self.addEventListener('fetch', (event) => {
   // Don't care about other-origin URLs
   if (url.origin !== location.origin) return;
 
-  if (url.pathname === '/editor') {
-    event.respondWith(Response.redirect('/'));
+  if (url.pathname === ROUTE_EDITOR) {
+    event.respondWith(Response.redirect(__BASE_PATH__));
     return;
   }
 
   if (
-    url.pathname === '/' &&
+    url.pathname === __BASE_PATH__ &&
     url.searchParams.has('share-target') &&
     event.request.method === 'POST'
   ) {

@@ -58,6 +58,20 @@ export function escapeStyleScriptContent(str: string): string {
 }
 
 /**
+ * Base path the app is deployed under, normalized to start and end with `/`
+ * (e.g. `/squoosh/`, or `/` for a root deployment). Mirrors the value used by
+ * the build's asset URL generation (see lib/entry-data-plugin.js), read from
+ * the BASE_PATH env var so the two stay in sync.
+ */
+export const basePath = (() => {
+  const raw = process.env.BASE_PATH || '/';
+  if (!raw || raw === '/') return '/';
+  let normalized = raw.startsWith('/') ? raw : '/' + raw;
+  if (!normalized.endsWith('/')) normalized += '/';
+  return normalized;
+})();
+
+/**
  * Origin of the site, depending on the environment.
  */
 export const siteOrigin = (() => {

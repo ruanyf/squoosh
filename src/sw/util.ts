@@ -47,7 +47,7 @@ export function serveShareTarget(event: FetchEvent): void {
   const dataPromise = event.request.formData();
 
   // Redirect so the user can refresh the page without resending data.
-  event.respondWith(Response.redirect('/?share-target'));
+  event.respondWith(Response.redirect(__BASE_PATH__ + '?share-target'));
 
   event.waitUntil(
     (async function () {
@@ -73,8 +73,10 @@ export function cleanupCache(
       // Clean old entries from the dynamic cache.
       const requests = await cache.keys();
       const promises = requests.map((cachedRequest) => {
-        // Get pathname without leading /
-        const assetPath = new URL(cachedRequest.url).pathname.slice(1);
+        // Strip the deployment base path so the result matches the relative
+        // asset names in `keepAssets` (e.g. `c/foo.js`, `.` for index).
+        const { pathname } = new URL(cachedRequest.url);
+        const assetPath = pathname.slice(__BASE_PATH__.length) || '.';
         // If it isn't one of our keepAssets, we don't need it anymore.
         if (!keepAssets.includes(assetPath)) return cache.delete(cachedRequest);
       });

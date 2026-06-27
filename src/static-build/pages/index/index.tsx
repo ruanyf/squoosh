@@ -17,7 +17,7 @@ import initialCss from 'initial-css:';
 import { allSrc } from 'client-bundle:client/initial-app';
 import favicon from 'url:static-build/assets/favicon.ico';
 import ogImage from 'url:static-build/assets/icon-large-maskable.png';
-import { escapeStyleScriptContent, siteOrigin } from 'static-build/utils';
+import { escapeStyleScriptContent, siteOrigin, basePath } from 'static-build/utils';
 import Intro from 'shared/prerendered-app/Intro';
 import snackbarCss from 'css:../../../shared/custom-els/snack-bar/styles.css';
 import * as snackbarStyle from '../../../shared/custom-els/snack-bar/styles.css';
@@ -61,7 +61,7 @@ const Index: FunctionalComponent<Props> = () => (
       <link rel="shortcut icon" href={favicon} />
       <link rel="apple-touch-icon" href={ogImage} />
       <meta name="theme-color" content="#ff3385" />
-      <link rel="manifest" href="/manifest.json" />
+      <link rel="manifest" href={`${basePath}manifest.json`} />
       <link rel="canonical" href={siteOrigin} />
       <style
         dangerouslySetInnerHTML={{ __html: escapeStyleScriptContent(baseCss) }}
@@ -92,7 +92,7 @@ const Index: FunctionalComponent<Props> = () => (
                 Initialization error: This site requires JavaScript, which is
                 disabled in your browser.
               </div>
-              <a class={snackbarStyle.button} href="/">
+              <a class={snackbarStyle.button} href={basePath}>
                 reload
               </a>
             </div>

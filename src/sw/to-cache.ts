@@ -50,7 +50,7 @@ import * as wp2EncMt from 'entry-data:codecs/wp2/enc/wp2_enc_mt';
 import * as wp2Enc from 'entry-data:codecs/wp2/enc/wp2_enc';
 
 export function shouldCacheDynamically(url: string) {
-  return url.startsWith('/c/demo-');
+  return url.startsWith(__BASE_PATH__ + 'c/demo-');
 }
 
 let initialJs = new Set([
@@ -80,7 +80,7 @@ initialJs = subtractSets(
   ]),
 );
 
-export const initial = ['/', ...initialJs];
+export const initial = [__BASE_PATH__, ...initialJs];
 
 export const theRest = (async () => {
   const [supportsThreads, supportsSimd, supportsWebP, supportsAvif] =

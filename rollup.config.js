@@ -32,7 +32,7 @@ import featurePlugin from './lib/feature-plugin';
 import initialCssPlugin from './lib/initial-css-plugin';
 import serviceWorkerPlugin from './lib/sw-plugin';
 import dataURLPlugin from './lib/data-url-plugin';
-import entryDataPlugin, { fileNameToURL } from './lib/entry-data-plugin';
+import entryDataPlugin, { fileNameToURL, basePath } from './lib/entry-data-plugin';
 import dedent from 'dedent';
 
 function resolveFileUrl({ fileName }) {
@@ -127,7 +127,11 @@ export default async function ({ watch }) {
             ...commonPlugins(),
             commonjs(),
             resolve(),
-            replace({ __PRERENDER__: false, __PRODUCTION__: isProduction }),
+            replace({
+              __PRERENDER__: false,
+              __PRODUCTION__: isProduction,
+              __BASE_PATH__: JSON.stringify(basePath),
+            }),
             entryDataPlugin(),
             isProduction ? terser({ module: true }) : {},
           ],
@@ -148,7 +152,11 @@ export default async function ({ watch }) {
       emitFiles({ include: '**/*', root: path.join(__dirname, 'src', 'copy') }),
       nodeExternalPlugin(),
       featurePlugin(),
-      replace({ __PRERENDER__: true, __PRODUCTION__: isProduction }),
+      replace({
+        __PRERENDER__: true,
+        __PRODUCTION__: isProduction,
+        __BASE_PATH__: JSON.stringify(basePath),
+      }),
       initialCssPlugin(),
       runScript(dir + '/static-build/index.js'),
     ],

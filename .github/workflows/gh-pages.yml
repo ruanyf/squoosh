@@ -26,7 +26,15 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run build
+      # GitHub Pages project sites are served under /<repo>/, so build the app
+      # with that base path. Asset URLs, the editor route, the service worker,
+      # and the manifest all pick this up via the BASE_PATH env var.
+      # (For a user/organization pages repo served at the domain root, set
+      # BASE_PATH="/" instead.)
+      - name: Build
+        run: npm run build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4

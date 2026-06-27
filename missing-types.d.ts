@@ -60,3 +60,7 @@ declare var ga: {
 };
 
 declare const __PRODUCTION__: boolean;
+
+// Base path the app is deployed under (e.g. `/squoosh/` or `/`).
+// Injected at build time via @rollup/plugin-replace from the BASE_PATH env var.
+declare const __BASE_PATH__: string;

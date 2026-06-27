@@ -12,7 +12,7 @@
  */
 import { h } from 'preact';
 
-import { renderPage, writeFiles } from './utils';
+import { renderPage, writeFiles, basePath } from './utils';
 import IndexPage from './pages/index';
 import * as iconLargeMaskable from 'img-url:static-build/assets/icon-large-maskable.png';
 import * as iconLarge from 'img-url:static-build/assets/icon-large.png';
@@ -57,7 +57,7 @@ const toOutput: Output = {
   'manifest.json': JSON.stringify({
     name: 'Squoosh',
     short_name: 'Squoosh',
-    start_url: '/?utm_medium=PWA&utm_source=launcher',
+    start_url: `${basePath}?utm_medium=PWA&utm_source=launcher`,
     display: 'standalone',
     orientation: 'any',
     background_color: '#fff',
@@ -81,7 +81,7 @@ const toOutput: Output = {
     categories: ['photo', 'productivity', 'utilities'],
     screenshots,
     share_target: {
-      action: '/?utm_medium=PWA&utm_source=share-target&share-target',
+      action: `${basePath}?utm_medium=PWA&utm_source=share-target&share-target`,
       method: 'POST',
       enctype: 'multipart/form-data',
       params: {
@@ -107,6 +107,10 @@ const toOutput: Output = {
       Cross-Origin-Embedder-Policy: require-corp
       Cross-Origin-Opener-Policy: same-origin
   `,
+  // Direct navigations to the editor route redirect to the home page. The
+  // paths are prefixed with the deployment base so this works under a
+  // subdirectory (e.g. `/squoosh/editor -> /squoosh/`).
+  _redirects: `${basePath}editor ${basePath} 301\n`,
 };
 
 writeFiles(toOutput);
